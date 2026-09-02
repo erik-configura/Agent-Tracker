@@ -29,7 +29,7 @@
         "id": "agenttracker.assistant",
         "name": "agenttracker",
         "fullName": "AgentTracker",
-        "description": "Chat here to have iterations and token usage logged automatically for the tracked Jira issue",
+        "description": "Chat assistant for tracked Jira work; usage is accounted when you stop tracking",
         "isSticky": true
       }
     ],

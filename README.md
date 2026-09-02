@@ -19,13 +19,26 @@ Press `F5` in VS Code to launch an Extension Development Host. The extension can
 2. Sign in with the inline form: Jira base URL, optional account email, and API token. For Jira Cloud, enter the account email so the extension can use Basic authentication; leaving the email empty uses a Bearer token for Jira Server/Data Center. The token is never written to the tracker JSON.
 3. Once signed in, AgentTracker automatically lists every issue assigned to you with a Jira status in the "In Progress" category — there's no manual add-issue step. The list refreshes on open and whenever you click the refresh button.
 4. Start and stop tracking independently for each issue. Multiple issues can remain in the list and retain their own sessions.
-5. Chat with `@agenttracker` in the Chat view (type `@` in the chat box to find it) for tracked agent work. Default Copilot Chat activity isn't observable by other extensions, so `@agenttracker` proxies your prompt to the selected language model and logs one iteration plus real input/output token counts against whichever tracked issue currently has an active timer. Use "Add note" in the AgentTracker view to capture decisions or blockers manually.
+5. When you click Stop tracking, AgentTracker attempts to export the current Copilot chat transcript to a temporary file and parse request-level usage fields from the export (`promptTokens`, `completionTokens`, `copilotCredits`). If automatic export is not available, the extension asks you to pick an exported `chat.json` file manually.
+6. AgentTracker applies usage as a delta from the session baseline: only requests after the Start marker are counted. For a first-time tracked issue with no baseline yet, AgentTracker treats the baseline as `0`, so the first stop can immediately populate totals from the exported chat.
+7. Use "Add note" in the AgentTracker view to capture decisions or blockers manually.
 
 Data is written to VS Code's global storage directory as `tracker.json`. Each issue records Jira metadata, timestamps, work sessions, total time, iteration count, token totals, prompt notes, changed-file placeholders, and blocker placeholders. Issues stay in this file even after they leave "In Progress" so history isn't lost; they simply drop out of the visible list. The rough cost estimate is derived from the `agenttracker.inputTokenPricePerMillion` and `agenttracker.outputTokenPricePerMillion` settings (dollars per 1,000,000 tokens, matching how most model providers publish pricing); both default to 0.
 
 ### About automatic tracking
 
-Iteration and token counts are only recorded for prompts sent through `@agenttracker`. This is a deliberate limitation: VS Code doesn't expose an API for one extension to observe another extension's chat activity, so default Copilot Chat's own prompts, responses, and token usage aren't visible to AgentTracker (an earlier attempt at parsing Copilot Chat's internal, undocumented local session transcripts turned out to only apply to a specific internal chat flow, not everyday Copilot Chat use, so it was removed). Token counts from `@agenttracker` come from the language model's own `countTokens`, so they're real figures, not estimates.
+Usage updates now run only when Stop tracking is clicked. AgentTracker does not watch log files and does not increment token counters during live chat events.
+
+The extension reads exported chat requests and uses explicit request-level usage fields when present:
+
+- `promptTokens` as input tokens
+- `completionTokens` as output tokens
+- `copilotCredits` as credits spent
+- model from `response[0].metadata.modelId`, then fallback to `result.metadata.resolvedModel`
+
+If `completionTokens` is missing but nested `outputTokens` metadata exists, AgentTracker uses it as a fallback and marks accounting as partial. If explicit usage fields are missing, AgentTracker marks usage as unavailable and does not fabricate totals.
+
+If a newer export contains fewer requests than the stored baseline (for example, a new chat thread), AgentTracker treats that as a reset and restarts delta calculation from `0` for that stop so usage can still be applied.
 
 ## Next extensions
 
