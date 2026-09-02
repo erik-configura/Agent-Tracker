@@ -1,6 +1,6 @@
 # AgentTracker
 
-AgentTracker is a VS Code extension for measuring Jira work and the cost of agent-assisted development. It keeps one local JSON file for all tracked issues and stores the Jira API token in VS Code's encrypted secret storage.
+AgentTracker is a VS Code extension for measuring Jira work and agent-assisted development usage. It keeps one local JSON file for all tracked issues and stores the Jira API token in VS Code's encrypted secret storage.
 
 ## Development
 
@@ -23,7 +23,7 @@ Press `F5` in VS Code to launch an Extension Development Host. The extension can
 6. AgentTracker applies usage as a delta from the session baseline: only requests after the Start marker are counted. For a first-time tracked issue with no baseline yet, AgentTracker treats the baseline as `0`, so the first stop can immediately populate totals from the exported chat.
 7. Use "Add note" in the AgentTracker view to capture decisions or blockers manually.
 
-Data is written to VS Code's global storage directory as `tracker.json`. Each issue records Jira metadata, timestamps, work sessions, total time, iteration count, token totals, prompt notes, changed-file placeholders, and blocker placeholders. Issues stay in this file even after they leave "In Progress" so history isn't lost; they simply drop out of the visible list. The rough cost estimate is derived from the `agenttracker.inputTokenPricePerMillion` and `agenttracker.outputTokenPricePerMillion` settings (dollars per 1,000,000 tokens, matching how most model providers publish pricing); both default to 0.
+Data is written to VS Code's global storage directory as `tracker.json`. Each issue records Jira metadata, timestamps, work sessions, total time, iteration count, token totals, Copilot credit totals, prompt notes, changed-file placeholders, and blocker placeholders. Issues stay in this file even after they leave "In Progress" so history isn't lost; they simply drop out of the visible list.
 
 ### About automatic tracking
 

@@ -7,21 +7,37 @@
   "engines": {
     "vscode": "^1.93.0"
   },
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      { "command": "agenttracker.configureJira", "title": "AgentTracker: Sign in to Jira" },
-      { "command": "agenttracker.refresh", "title": "AgentTracker: Refresh" }
+      {
+        "command": "agenttracker.configureJira",
+        "title": "AgentTracker: Sign in to Jira"
+      },
+      {
+        "command": "agenttracker.refresh",
+        "title": "AgentTracker: Refresh"
+      }
     ],
     "viewsContainers": {
       "activitybar": [
-        { "id": "agenttracker", "title": "AgentTracker", "icon": "media/activity.svg" }
+        {
+          "id": "agenttracker",
+          "title": "AgentTracker",
+          "icon": "media/activity.svg"
+        }
       ]
     },
     "views": {
       "agenttracker": [
-        { "type": "webview", "id": "agenttracker.dashboard", "name": "Work tracker" }
+        {
+          "type": "webview",
+          "id": "agenttracker.dashboard",
+          "name": "Work tracker"
+        }
       ]
     },
     "chatParticipants": [
@@ -40,18 +56,6 @@
           "type": "string",
           "default": "",
           "description": "Jira base URL, for example https://company.atlassian.net"
-        },
-        "agenttracker.inputTokenPricePerMillion": {
-          "type": "number",
-          "default": 0,
-          "minimum": 0,
-          "description": "Cost in dollars per 1,000,000 input tokens, used for the rough cost estimate"
-        },
-        "agenttracker.outputTokenPricePerMillion": {
-          "type": "number",
-          "default": 0,
-          "minimum": 0,
-          "description": "Cost in dollars per 1,000,000 output tokens, used for the rough cost estimate"
         }
       }
     }
@@ -62,9 +66,9 @@
     "package": "npm run compile && vsce package"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
     "@types/node": "^20.0.0",
-    "typescript": "^5.3.0",
-    "@vscode/vsce": "^2.24.0"
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "^5.3.0"
   }
 }
